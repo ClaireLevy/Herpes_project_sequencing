@@ -1,0 +1,158 @@
+---
+title: "Sequence analysis"
+author: "Claire Levy"
+date: "June 10, 2016"
+output: github_document
+---
+
+This is a summary of the data we got from sequencing the 186 and SD90 strains of HSV2 that we used to infect explants and cells in this experiment. "FH" strains refer to the strains from our lab. "Reference" refers to the reference sequence that Alex used for comparison.
+
+See J:/MacLabUsers/HLADIK SHARED/Projects/Herpes study/Sequencing/sequencing_README for motivation and more info.
+
+
+```{r setup, message=FALSE, echo=FALSE, warning = FALSE}
+library(dplyr)
+library(stringr)
+library(pander)
+
+#reading in the data from Alex, he sent me .csv files from Geneious
+
+#this is a comparison of the reference 186 seq and the 186 that we used in the experiment
+FH186_vs_ref186 <-read.csv("SD90_and_186_AG/Florian186_versus_reference186.csv")
+
+#SNPs that have a blank in the "protein effect" column means that the SNP is not in the coding sequence. The following is  the SNPs that WERE in the coding sequence.
+
+FH186_vs_ref186_CDS <- FH186_vs_ref186 %>%
+  filter(Protein.Effect!= "")
+
+
+#of the SNPs that were in the CDS, some do not result in a different amino acid (have "none" in the Protein Effect column). The following are the SNPs that DO result in a coding change.
+
+FH186_vs_ref186_CDS_aaChange <- FH186_vs_ref186_CDS%>%
+  filter(Protein.Effect != "None")
+  
+#number of instances of each SNP type
+
+FH186_vs_ref186_CDS_aaChange_type <-FH186_vs_ref186_CDS_aaChange %>%
+  group_by(product,Polymorphism.Type)%>%
+  summarize(SNPs = n())
+
+colnames(FH186_vs_ref186_CDS_aaChange_type)<- c("Product","Polymorphism","SNPs")
+
+```
+
+
+
+## FH 186 vs. reference 186
+
+
+Total SNPs = `r nrow(FH186_vs_ref186)`
+
+SNPs in coding sequence = `r nrow(FH186_vs_ref186_CDS)`
+
+SNPs in coding sequence with aa change = `r nrow(FH186_vs_ref186_CDS_aaChange)`
+
+Of this `r nrow(FH186_vs_ref186_CDS_aaChange)`, there were the following types of SNPs and products:
+
+`r pander(FH186_vs_ref186_CDS_aaChange_type)`
+
+```{r, echo=FALSE, message = FALSE}
+#Now a comparison of FH 186 vs refSD90(=our SD90 since they were nearly identical)
+
+FH186_vs_refSD90 <- read.csv("SD90_and_186_AG/Florian-186_versus_KF781518.csv")
+
+FH186_vs_refSD90_CDS <- FH186_vs_refSD90 %>%
+  filter(Protein.Effect!= "")
+
+
+FH186_vs_refSD90_CDS_aaChange <- FH186_vs_refSD90_CDS %>%
+  filter(Protein.Effect != "None")
+
+
+FH186_vs_refSD90_CDS_aaChange_type <- FH186_vs_refSD90_CDS_aaChange%>%
+  group_by(product,Polymorphism.Type )%>%
+  summarize(SNPs = n())
+
+
+colnames(FH186_vs_refSD90_CDS_aaChange_type)<- c("Product","Polymorphism","SNPs")
+
+
+```
+
+## FH 186 vs Reference SD90 (nearly identical to our SD90)
+
+Total SNPs = `r nrow(FH186_vs_refSD90)`
+
+SNPs in coding sequence = `r nrow(FH186_vs_refSD90_CDS)`
+
+SNPs in coding sequence with aa change = `r nrow(FH186_vs_refSD90_CDS_aaChange)`
+
+Of this `r nrow(FH186_vs_refSD90_CDS_aaChange)`, there were the following types of SNPs and products:
+
+
+`r pander(FH186_vs_refSD90_CDS_aaChange_type)`
+
+```{r, echo=FALSE}
+
+#This is a comparison of reference 186 vs reference SD90
+
+refSD90_vs_ref186<-read.csv("SD90_and_186_AG/referenceSD90_versus_reference186.csv")
+
+
+refSD90_vs_ref186_CDS <- refSD90_vs_ref186 %>%
+  filter(Protein.Effect!= "")
+
+
+refSD90_vs_ref186_CDS_aaChange <- refSD90_vs_ref186_CDS%>%
+  filter(Protein.Effect != "None")
+
+#number of instances of each SNP type
+refSD90_vs_ref186_CDS_aaChange_type<-refSD90_vs_ref186%>%
+  group_by(product,Polymorphism.Type )%>%
+  summarize(SNPs = n())
+
+
+colnames(refSD90_vs_ref186_CDS_aaChange_type)<- c("Product","Polymorphism","SNPs")
+```
+
+## Reference SD90 vs Reference 186
+
+Total SNPs = `r nrow(refSD90_vs_ref186)`
+
+SNPs in coding sequence = `r nrow(refSD90_vs_ref186_CDS)`
+
+SNPs in coding sequence with aa change = `r nrow(refSD90_vs_ref186_CDS_aaChange)`
+
+Of this `r nrow(refSD90_vs_ref186_CDS_aaChange)`, there were the following types of SNPs and products:
+
+
+
+`r pander(refSD90_vs_ref186_CDS_aaChange_type)`
+
+
+
+```{r, echo=FALSE}
+
+#find rows in the product and polymorphism columns from the two comparisions FH186_vs_ref186 & FH186_vs_refSD90 that are the same.
+
+olap_FH186_vs_ref186_FH186_vs_refSD90 <- merge(FH186_vs_ref186_CDS_aaChange_type[,1:2],FH186_vs_refSD90_CDS_aaChange_type[,1:2])
+
+
+#find rows in the product and polymorphism columns from the two comparisions FH186_vs_refSD90 & ref186_vs_refSD90 that are the same.
+
+olap_FH186_vs_refSD90_refSD90_vs_ref186 <- merge(FH186_vs_refSD90_CDS_aaChange_type[,1:2],refSD90_vs_ref186_CDS_aaChange_type[,1:2])
+
+```
+
+## Summary and Overlaps
+
+The Reference SD90 vs Reference 186 comparison resulted in `r nrow(refSD90_vs_ref186_CDS_aaChange_type)- nrow(FH186_vs_refSD90_CDS_aaChange_type)` more SNPs in the coding sequence than the Reference SD90 vs FH 186 comparison.
+
+There are `r nrow(olap_FH186_vs_refSD90_refSD90_vs_ref186)` SNP + Product combinations that overlap these two comparisons.
+
+`r pander(olap_FH186_vs_refSD90_refSD90_vs_ref186)`
+
+
+There are `r nrow(olap_FH186_vs_ref186_FH186_vs_refSD90)` SNP + Product combinations that overlap between the "FH 186 vs Reference 186" and "FH 186 vs Reference SD90" comparisons:
+
+`r pander(olap_FH186_vs_ref186_FH186_vs_refSD90)`
