@@ -3,7 +3,7 @@ Sequence analysis
 Claire Levy
 June 10, 2016
 
-This is a summary of the data we got from sequencing the 186 and SD90 strains of HSV2 that we used to infect explants and cells in this experiment. "FH" strains refer to the strains from our lab. "Reference" refers to the reference sequence that Alex used for comparison.
+This is a summary of the data we got from sequencing the 186 and SD90 strains of HSV2 that we used to infect explants and cells in this experiment. "FH" strains refer to the strains from our lab. "Reference" refers to the reference sequence that Alex used for comparison. He called the variants at 8x coverage and &gt;50% allele frequency.
 
 See J:/MacLabUsers/HLADIK SHARED/Projects/Herpes study/Sequencing/sequencing\_README for motivation and more info.
 
