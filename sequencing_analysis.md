@@ -7,6 +7,8 @@ This is a summary of the data we got from sequencing the 186 and SD90 strains of
 
 See J:/MacLabUsers/HLADIK SHARED/Projects/Herpes study/Sequencing/sequencing\_README for motivation and more info.
 
+When Alex compared our SD90 virus to the reference strain (KF781518) and found no real SNPs, so he assumed them to be equivalent and used the KF781518 sequence instead of our SD90 for the comparisons below.
+
 FH 186 vs. reference 186
 ------------------------
 
